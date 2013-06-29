@@ -15,7 +15,7 @@ import javax.enterprise.inject.spi.Bean;
 public class CustomScopeContext implements Context, Serializable {
 
     //moved to CustomScopeContextHolder
-//    private static Map<Class, Object> customScopeContextHolder.getBeans() = Collections.synchronizedMap(new HashMap<Class, Object>());
+//    private static Map<Class, Object> beans = Collections.synchronizedMap(new HashMap<Class, Object>());
 
     private CustomScopeContextHolder customScopeContextHolder;
     
