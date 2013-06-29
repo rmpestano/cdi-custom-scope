@@ -7,6 +7,7 @@ package custom.scope.web;
 import custom.scope.extension.MyScope;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.NormalScope;
 import javax.inject.Named;
 
@@ -33,6 +34,11 @@ public class MyBean2 implements Serializable{
     @PostConstruct
     public void create(){
         System.out.println("creating bean:"+this);
+    }
+    
+    @PreDestroy
+    public void destroy(){
+        System.out.println("destroing bean:"+this);
     }
     
 }

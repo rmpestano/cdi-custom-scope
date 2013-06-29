@@ -1,5 +1,6 @@
 package custom.scope.extension;
 
+import custom.scope.extension.CustomScopeContextHolder.CustomScopeInstance;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import javax.enterprise.context.spi.Context;
@@ -14,9 +15,6 @@ import javax.enterprise.inject.spi.Bean;
  */
 public class CustomScopeContext implements Context, Serializable {
 
-    //moved to CustomScopeContextHolder
-//    private static Map<Class, Object> beans = Collections.synchronizedMap(new HashMap<Class, Object>());
-
     private CustomScopeContextHolder customScopeContextHolder;
     
     public CustomScopeContext() {
@@ -28,7 +26,7 @@ public class CustomScopeContext implements Context, Serializable {
     public <T> T get(final Contextual<T> contextual) {
         Bean bean = (Bean) contextual;
         if (customScopeContextHolder.getBeans().containsKey(bean.getBeanClass())) {
-            return (T) customScopeContextHolder.getBeans().get(bean.getBeanClass());
+            return (T) customScopeContextHolder.getBean(bean.getBeanClass()).instance;
         } else {
             return null;
         }
@@ -38,10 +36,14 @@ public class CustomScopeContext implements Context, Serializable {
     public <T> T get(final Contextual<T> contextual, final CreationalContext<T> creationalContext) {
         Bean bean = (Bean) contextual;
         if (customScopeContextHolder.getBeans().containsKey(bean.getBeanClass())) {
-            return (T) customScopeContextHolder.getBean(bean.getBeanClass());
+            return (T) customScopeContextHolder.getBean(bean.getBeanClass()).instance;
         } else {
             T t = (T) bean.create(creationalContext);
-            customScopeContextHolder.putBean(bean.getBeanClass(), t);
+            CustomScopeInstance customInstance = new CustomScopeInstance();
+            customInstance.bean = bean;
+            customInstance.ctx = creationalContext;
+            customInstance.instance = t;
+            customScopeContextHolder.putBean(customInstance);
             return t;
         }
     }
@@ -57,7 +59,7 @@ public class CustomScopeContext implements Context, Serializable {
 
     public void passivate(@Observes KillEvent killEvent) {
         if (customScopeContextHolder.getBeans().containsKey(killEvent.getBeanType())) {
-            customScopeContextHolder.getBeans().remove(killEvent.getBeanType());
+            customScopeContextHolder.destroyBean(customScopeContextHolder.getBean(killEvent.getBeanType()));
         }
     }
 }
