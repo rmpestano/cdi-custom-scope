@@ -6,9 +6,9 @@ package custom.scope.web;
 
 import custom.scope.extension.MyScope;
 import java.io.Serializable;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.enterprise.context.NormalScope;
 import javax.inject.Named;
 
 /**
@@ -20,7 +20,7 @@ import javax.inject.Named;
 public class MyBean2 implements Serializable{
     
     private String attribute;
-  
+    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     public String getAttribute() {
         return attribute;
@@ -33,12 +33,12 @@ public class MyBean2 implements Serializable{
     
     @PostConstruct
     public void create(){
-        System.out.println("creating bean:"+this);
+        log.info("creating bean:"+this);
     }
     
     @PreDestroy
     public void destroy(){
-        System.out.println("destroing bean:"+this);
+        log.info("destroing bean:"+this);
     }
     
 }

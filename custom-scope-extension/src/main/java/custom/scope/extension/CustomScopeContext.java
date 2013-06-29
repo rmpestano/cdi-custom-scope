@@ -3,6 +3,7 @@ package custom.scope.extension;
 import custom.scope.extension.CustomScopeContextHolder.CustomScopeInstance;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.logging.Logger;
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.context.spi.Contextual;
 import javax.enterprise.context.spi.CreationalContext;
@@ -14,11 +15,13 @@ import javax.enterprise.inject.spi.Bean;
  * @author rmpestano
  */
 public class CustomScopeContext implements Context, Serializable {
+    
+    private Logger log = Logger.getLogger(getClass().getSimpleName());
 
     private CustomScopeContextHolder customScopeContextHolder;
     
     public CustomScopeContext() {
-        System.out.println("Init");
+        log.info("Init");
         this.customScopeContextHolder = CustomScopeContextHolder.getInstance();
     }
 
